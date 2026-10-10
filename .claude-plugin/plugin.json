@@ -1,0 +1,13 @@
+{
+  "name": "vibe-teacher",
+  "displayName": "VIBE Teacher",
+  "version": "0.1.0",
+  "description": "Teaches vibe coders their own codebase in plain English: architecture tours, file maps, click-to-database flows, a transparent score out of 100, security red flags and copy-paste fix prompts.",
+  "author": {
+    "name": "tawsifar"
+  },
+  "homepage": "https://github.com/tawsifar/vibe-teacher",
+  "repository": "https://github.com/tawsifar/vibe-teacher",
+  "license": "MIT",
+  "keywords": ["education", "beginners", "code-review", "architecture", "vibe-coding", "security", "agent-skills"]
+}

@@ -1,0 +1,14 @@
+{
+  "name": "vibe-teacher-market",
+  "owner": {
+    "name": "tawsifar"
+  },
+  "description": "VIBE Teacher skill for Claude Code",
+  "plugins": [
+    {
+      "name": "vibe-teacher",
+      "source": "./",
+      "description": "Teaches vibe coders their own codebase, scores it out of 100."
+    }
+  ]
+}

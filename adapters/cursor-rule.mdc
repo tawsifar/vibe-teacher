@@ -1,0 +1,9 @@
+---
+description: Use the vibe-teacher skill to explain, review or score this project
+alwaysApply: true
+---
+
+When the user asks to explain, tour, map, review, score, rate or improve this project, asks what a
+file does or what happens when they click something, or asks if the app is safe, use the
+`vibe-teacher` skill. Plain English, structured cards, cite file:line, mask secrets, read-only
+unless the user says "apply".
