@@ -1,0 +1,84 @@
+name: validate
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: ${{ matrix.os }} / Node ${{ matrix.node }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        node: [20, 22]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+
+      - name: Scanner unit tests
+        run: node --test skills/vibe-teacher/scripts/scan-project.test.mjs
+
+      - name: Skill spec + repo checks
+        run: node scripts-dev/check-skill.mjs
+
+      - name: Scanner smoke test on examples
+        run: node scripts-dev/smoke-scan.mjs
+
+      - name: Install script syntax (bash)
+        if: runner.os == 'Linux'
+        run: bash -n install/install.sh
+
+      - name: Install script dry run (bash, local source)
+        if: runner.os == 'Linux'
+        run: |
+          export HOME="$RUNNER_TEMP/home" && mkdir -p "$HOME"
+          bash install/install.sh --source .
+          test -f "$HOME/.claude/skills/vibe-teacher/SKILL.md"
+          test -f "$HOME/.agents/skills/vibe-teacher/SKILL.md"
+          test -f "$HOME/.gemini/config/skills/vibe-teacher/SKILL.md"
+          bash install/install.sh --uninstall
+          test ! -e "$HOME/.claude/skills/vibe-teacher"
+
+      - name: Install script syntax + dry run (PowerShell)
+        if: runner.os == 'Windows'
+        shell: powershell
+        run: |
+          $errors = $null
+          [System.Management.Automation.Language.Parser]::ParseFile("$PWD\install\install.ps1", [ref]$null, [ref]$errors) | Out-Null
+          if ($errors.Count -gt 0) { $errors; exit 1 }
+          $env:USERPROFILE = "$env:RUNNER_TEMP\home"
+          New-Item -ItemType Directory -Force $env:USERPROFILE | Out-Null
+          & .\install\install.ps1 --source .
+          if (-not (Test-Path "$env:USERPROFILE\.claude\skills\vibe-teacher\SKILL.md")) { exit 1 }
+          & .\install\install.ps1 --uninstall
+          if (Test-Path "$env:USERPROFILE\.claude\skills\vibe-teacher") { exit 1 }
+
+  official-validators:
+    # Extra checks with the official tools. Informational: they don't block merges,
+    # because their install paths and flags change between releases.
+    name: official validators (optional)
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - uses: astral-sh/setup-uv@v6
+
+      - name: skills-ref validate
+        run: uvx --from "git+https://github.com/agentskills/agentskills#subdirectory=skills-ref" skills-ref validate skills/vibe-teacher
+
+      - name: claude plugin validate
+        run: npx -y @anthropic-ai/claude-code plugin validate . --strict
