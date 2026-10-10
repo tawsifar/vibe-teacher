@@ -75,7 +75,7 @@ jobs:
         with:
           node-version: 22
 
-      - uses: astral-sh/setup-uv@v6
+      - uses: astral-sh/setup-uv@v7
 
       - name: skills-ref validate
         run: uvx --from "git+https://github.com/agentskills/agentskills#subdirectory=skills-ref" skills-ref validate skills/vibe-teacher
