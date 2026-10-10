@@ -25,7 +25,7 @@ jobs:
           node-version: ${{ matrix.node }}
 
       - name: Scanner unit tests
-        run: node --test skills/vibe-teacher/scripts/scan-project.test.mjs
+        run: node --test tests/scan-project.test.mjs
 
       - name: Skill spec + repo checks
         run: node scripts-dev/check-skill.mjs
@@ -82,3 +82,53 @@ jobs:
 
       - name: claude plugin validate
         run: npx -y @anthropic-ai/claude-code plugin validate . --strict
+
+  install-from-github:
+    # Real end-to-end installs from the published repo, the way users do it.
+    # Only runs on main, after the code is on GitHub.
+    name: install from GitHub (${{ matrix.os }})
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    steps:
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: One-line script (macOS / Linux)
+        if: runner.os != 'Windows'
+        run: |
+          export HOME="$RUNNER_TEMP/home-script" && mkdir -p "$HOME"
+          curl -fsSL "https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/${GITHUB_SHA}/install/install.sh" | VIBE_TEACHER_BRANCH="${GITHUB_REF_NAME}" bash
+          test -f "$HOME/.claude/skills/vibe-teacher/SKILL.md"
+          test -f "$HOME/.agents/skills/vibe-teacher/SKILL.md"
+          test -f "$HOME/.gemini/config/skills/vibe-teacher/SKILL.md"
+
+      - name: One-line script (Windows)
+        if: runner.os == 'Windows'
+        shell: powershell
+        run: |
+          $env:USERPROFILE = "$env:RUNNER_TEMP\home-script"
+          New-Item -ItemType Directory -Force $env:USERPROFILE | Out-Null
+          irm "https://raw.githubusercontent.com/$env:GITHUB_REPOSITORY/$env:GITHUB_SHA/install/install.ps1" | iex
+          if (-not (Test-Path "$env:USERPROFILE\.claude\skills\vibe-teacher\SKILL.md")) { exit 1 }
+
+      - name: npx skills add
+        shell: bash
+        run: |
+          export HOME="$RUNNER_TEMP/home-npx" USERPROFILE="$RUNNER_TEMP/home-npx" && mkdir -p "$HOME"
+          npx -y skills add "$GITHUB_REPOSITORY" -g -y --copy -a claude-code -a codex
+          test -f "$HOME/.claude/skills/vibe-teacher/SKILL.md"
+          test -f "$HOME/.agents/skills/vibe-teacher/SKILL.md"
+          test ! -e "$HOME/.claude/skills/vibe-teacher/scripts/scan-project.test.mjs"
+
+      - name: Claude Code plugin marketplace install
+        if: runner.os == 'Linux'
+        run: |
+          export CLAUDE_CONFIG_DIR="$RUNNER_TEMP/claude-config" && mkdir -p "$CLAUDE_CONFIG_DIR"
+          npx -y @anthropic-ai/claude-code plugin marketplace add "$GITHUB_REPOSITORY"
+          npx -y @anthropic-ai/claude-code plugin install vibe-teacher@vibe-teacher-market
+          find "$CLAUDE_CONFIG_DIR" -path '*vibe-teacher*/skills/vibe-teacher/SKILL.md' | grep -q SKILL.md
