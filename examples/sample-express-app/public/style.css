@@ -1,0 +1,5 @@
+body { font-family: system-ui, sans-serif; background: #f6f7fb; margin: 0; }
+main { max-width: 480px; margin: 40px auto; padding: 24px; background: #fff; border-radius: 12px; }
+form { display: flex; gap: 8px; margin-bottom: 16px; }
+input { flex: 1; padding: 8px; }
+li.done { text-decoration: line-through; color: #888; }
