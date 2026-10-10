@@ -1,0 +1,15 @@
+name: Feature or stack request
+description: Suggest a new mode, a better explanation, or support for another framework
+labels: [enhancement]
+body:
+  - type: textarea
+    id: idea
+    attributes:
+      label: What would you like VIBE Teacher to do?
+    validations:
+      required: true
+  - type: input
+    id: stack
+    attributes:
+      label: Framework / stack (if this is a stack request)
+      placeholder: e.g. Laravel, Ruby on Rails, SvelteKit

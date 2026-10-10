@@ -269,14 +269,15 @@ vibe-teacher/
 ├── skills/vibe-teacher/      # ⭐ THE skill (this is what gets installed)
 │   ├── SKILL.md              # router, rules, modes
 │   ├── references/           # detailed guides, loaded only when needed
-│   ├── scripts/              # zero-dependency project scanner + tests
+│   ├── scripts/              # zero-dependency project scanner
 │   └── assets/templates/     # the card/table layouts every answer follows
 ├── adapters/                 # optional "use the skill" hints for AGENTS.md / Copilot / Cursor
 ├── install/                  # one-line installers (bash + PowerShell)
 ├── examples/                 # demo apps with planted (fake) issues + sample outputs
 ├── evals/                    # trigger and output evaluation sets
+├── tests/                    # scanner unit tests (not installed)
 ├── scripts-dev/              # repo validation scripts used by CI
-└── .github/workflows/        # CI: tests on Ubuntu + Windows
+└── .github/                  # CI (tests + real installs on Linux, macOS, Windows), templates
 ```
 
 ## 🧑‍💻 For contributors

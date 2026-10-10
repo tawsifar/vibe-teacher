@@ -14,9 +14,11 @@ When releasing, bump the version in **both** `skills/vibe-teacher/SKILL.md` (`me
   `error`, `badge`, `level eli5|beginner|junior`, `lang en|bn`.
 - Transparent 100-point rubric with evidence-based deductions, red-flag caps and size scaling.
 - Zero-dependency project scanner (`scripts/scan-project.mjs`) with masked secret detection, stack and
-  route detection, `.env`/Git checks and quality signals, plus 13 unit tests.
+  route detection, `.env`/Git checks and quality signals. 13 unit tests live in `tests/` so user installs stay lean.
 - Stack packs: Node/Express, Next.js/React/Vite, Python (Flask/FastAPI/Django/Streamlit), Supabase/Firebase, static HTML.
 - 14 output templates, 80+ term glossary, analogies library, Bangla style guide.
 - Claude Code plugin + marketplace manifests, `npx skills` support, install scripts for macOS/Linux and Windows.
 - Example apps with planted (fake) issues, sample outputs, trigger and output eval sets.
-- CI on Ubuntu and Windows (Node 20 and 22).
+- CI on Ubuntu and Windows (Node 20 and 22), official `skills-ref` and `claude plugin validate` checks, and
+  real end-to-end installs from GitHub (script, `npx skills`, Claude Code plugin) on Linux, macOS and Windows.
+- SECURITY.md, Dependabot for GitHub Actions, issue and PR templates.
