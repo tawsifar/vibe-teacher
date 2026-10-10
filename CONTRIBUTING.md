@@ -38,7 +38,7 @@ Requirements: Node.js 18+ (CI uses 20 and 22). There are **zero npm dependencies
    "What it is (5 lines)", typical layout table, request flow, common beginner mistakes, deployment.
 2. Add detection to `scripts/scan-project.mjs` (`FRAMEWORK_DEPS`, `PY_FRAMEWORKS` or `CONFIG_HINTS`).
 3. Add a row to the "Stack packs" table in `SKILL.md`.
-4. Add a test in `scripts/scan-project.test.mjs` (use `tempProject()` for a tiny fixture).
+4. Add a test in `tests/scan-project.test.mjs` (use `tempProject()` for a tiny fixture).
 5. Run `npm test`.
 
 ## Add a mode

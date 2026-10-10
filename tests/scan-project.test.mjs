@@ -1,6 +1,5 @@
-// Tests for scan-project.mjs. Run: node --test skills/vibe-teacher/scripts/scan-project.test.mjs
-// The example fixtures live in the repo's examples/ folder; tests that need them
-// are skipped when the skill is installed on its own.
+// Tests for the skill's scanner. Run: node --test tests/scan-project.test.mjs
+// Kept outside skills/ so user installs stay lean. Fixtures live in examples/.
 
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
@@ -9,10 +8,10 @@ import os from 'node:os';
 import path from 'node:path';
 import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
-import { scanProject, maskSecret, isIgnoredBy } from './scan-project.mjs';
+import { scanProject, maskSecret, isIgnoredBy } from '../skills/vibe-teacher/scripts/scan-project.mjs';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
-const examples = path.resolve(here, '..', '..', '..', 'examples');
+const examples = path.resolve(here, '..', 'examples');
 const expressApp = path.join(examples, 'sample-express-app');
 const nextApp = path.join(examples, 'sample-next-app');
 const noFixtures = !fs.existsSync(expressApp);
@@ -140,7 +139,7 @@ test('flags long functions and large files', () => {
 });
 
 test('CLI prints valid JSON and fails kindly on a missing folder', { skip: noFixtures }, () => {
-  const script = path.join(here, 'scan-project.mjs');
+  const script = path.resolve(here, '..', 'skills', 'vibe-teacher', 'scripts', 'scan-project.mjs');
   const out = execFileSync(process.execPath, [script, expressApp], { encoding: 'utf8' });
   const facts = JSON.parse(out);
   for (const key of ['root', 'summary', 'tree', 'frameworks', 'entryPoints', 'routes', 'env', 'secrets', 'quality', 'warnings']) {

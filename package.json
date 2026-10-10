@@ -14,8 +14,8 @@
     "node": ">=18"
   },
   "scripts": {
-    "test": "node --test skills/vibe-teacher/scripts/scan-project.test.mjs && node scripts-dev/check-skill.mjs && node scripts-dev/smoke-scan.mjs",
-    "test:scanner": "node --test skills/vibe-teacher/scripts/scan-project.test.mjs",
+    "test": "node --test tests/scan-project.test.mjs && node scripts-dev/check-skill.mjs && node scripts-dev/smoke-scan.mjs",
+    "test:scanner": "node --test tests/scan-project.test.mjs",
     "check": "node scripts-dev/check-skill.mjs",
     "smoke": "node scripts-dev/smoke-scan.mjs",
     "scan": "node skills/vibe-teacher/scripts/scan-project.mjs"
